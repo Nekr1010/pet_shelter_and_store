@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"MindsWallet/internal/configs"
-	"MindsWallet/logger"
 	"github.com/gin-gonic/gin"
+	"pet_shelter_and_store/internal/configs"
+	"pet_shelter_and_store/logger"
 )
 
 func RunServer() error {

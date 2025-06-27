@@ -1,12 +1,12 @@
 package db
 
 import (
-	"MindsWallet/internal/configs"
-	"MindsWallet/logger"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"os"
+	"pet_shelter_and_store/internal/configs"
+	"pet_shelter_and_store/logger"
 )
 
 var db *sqlx.DB

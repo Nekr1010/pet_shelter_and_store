@@ -1,10 +1,10 @@
 package service
 
 import (
-	"MindsWallet/internal/errs"
-	"MindsWallet/internal/models"
-	"MindsWallet/internal/repository"
 	"errors"
+	"pet_shelter_and_store/internal/errs"
+	"pet_shelter_and_store/internal/models"
+	"pet_shelter_and_store/internal/repository"
 )
 
 func GetAllAccounts() ([]models.Account, error) {
@@ -58,7 +58,7 @@ func WithdrawFromAccount(userID, accountID int, amount float64) error {
 
 	// проверить хватит ли денег
 	if account.Balance < amount {
-		return errs.ErrNotEnoughBalance
+		return errs.ErrUserAlreadyExists
 	}
 
 	// отправить запрос на снятие

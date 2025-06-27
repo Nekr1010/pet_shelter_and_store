@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"MindsWallet/internal/db"
-	"MindsWallet/internal/models"
+	"pet_shelter_and_store/internal/db"
+	"pet_shelter_and_store/internal/models"
 )
 
 func GetAllAccounts() ([]models.Account, error) {

@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"MindsWallet/internal/errs"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"pet_shelter_and_store/internal/errs"
 )
 
 func HandleError(c *gin.Context, err error) {

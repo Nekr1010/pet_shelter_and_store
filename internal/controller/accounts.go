@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"MindsWallet/internal/errs"
-	"MindsWallet/internal/models"
-	"MindsWallet/internal/service"
-	"MindsWallet/logger"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"pet_shelter_and_store/internal/errs"
+	"pet_shelter_and_store/internal/models"
+	"pet_shelter_and_store/internal/service"
+	"pet_shelter_and_store/logger"
 	"strconv"
 )
 

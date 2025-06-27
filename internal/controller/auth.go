@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"MindsWallet/internal/models"
-	"MindsWallet/internal/service"
-	"MindsWallet/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"pet_shelter_and_store/internal/models"
+	"pet_shelter_and_store/internal/service"
+	"pet_shelter_and_store/utils"
 )
 
 func SignUp(c *gin.Context) {

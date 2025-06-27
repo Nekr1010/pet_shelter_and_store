@@ -1,11 +1,11 @@
 package service
 
 import (
-	"MindsWallet/internal/errs"
-	"MindsWallet/internal/models"
-	"MindsWallet/internal/repository"
-	"MindsWallet/utils"
 	"errors"
+	"pet_shelter_and_store/internal/errs"
+	"pet_shelter_and_store/internal/models"
+	"pet_shelter_and_store/internal/repository"
+	"pet_shelter_and_store/utils"
 )
 
 func CreateUser(u models.User) error {

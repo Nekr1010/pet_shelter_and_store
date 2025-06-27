@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"MindsWallet/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"pet_shelter_and_store/utils"
 	"strings"
 )
 

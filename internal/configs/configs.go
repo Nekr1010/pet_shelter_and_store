@@ -1,13 +1,13 @@
 package configs
 
 import (
-	"MindsWallet/internal/models"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"pet_shelter_and_store/internal/models"
 )
 
 var AppSettings models.Configs

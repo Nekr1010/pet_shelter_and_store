@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"MindsWallet/internal/errs"
 	"database/sql"
 	"errors"
+	"pet_shelter_and_store/internal/errs"
 )
 
 func translateError(err error) error {

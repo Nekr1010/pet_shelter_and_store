@@ -10,7 +10,7 @@ func InitMigrations() error {
             full_name VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
-            role VARCHAR(20) NOT NULL CHECK (role IN ('superadmin', 'shop_owner', 'admin', 'volunteer', 'user')),
+            role VARCHAR(20) NOT NULL CHECK (role IN ('superadmin', 'shop_owner', 'volunteer', 'user')),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP,
             deleted_at TIMESTAMP

@@ -1,13 +1,13 @@
 package logger
 
 import (
-	"MindsWallet/internal/configs"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"log"
 	"os"
+	"pet_shelter_and_store/internal/configs"
 )
 
 // Объявление глобальных логгеров

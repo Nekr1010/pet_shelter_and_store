@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"MindsWallet/internal/db"
-	"MindsWallet/internal/models"
-	"MindsWallet/logger"
+	"pet_shelter_and_store/internal/db"
+	"pet_shelter_and_store/internal/models"
+	"pet_shelter_and_store/logger"
 )
 
 func GetUserByUsernameAndPassword(username string, password string) (user models.User, err error) {

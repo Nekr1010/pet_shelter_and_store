@@ -16,7 +16,7 @@
   },
   "app_params": {
     "gin_mode": "release",
-    "port_run": ":9091",
+    "port_run": ":1010",
     "server_url": "localhost",
     "server_name": "Pet_shelter_and_store"
   },
