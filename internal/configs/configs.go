@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"pet_shelter_and_store/internal/models"
@@ -13,14 +12,6 @@ import (
 var AppSettings models.Configs
 
 func ReadSettings() error {
-	fmt.Println("Loading .env file")
-
-	// Просто грузим .env в переменные окружения
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println(".env file not found, using system environment variables")
-	}
-
 	fmt.Println("Reading settings file: configs/configs.json")
 	configFile, err := os.Open("internal/configs/configs.json")
 	if err != nil {

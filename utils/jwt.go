@@ -5,29 +5,52 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"os"
 	"pet_shelter_and_store/internal/configs"
+	"pet_shelter_and_store/internal/errs"
+	"pet_shelter_and_store/internal/models"
 	"time"
 )
 
 // CustomClaims определяет кастомные поля токена
 type CustomClaims struct {
-	UserID   int    `json:"user_id"`
-	Username string `json:"username"`
+	UserID   uint            `json:"user_id"`
+	UserRole models.UserRole `json:"user_role"`
 	jwt.StandardClaims
 }
 
 // GenerateToken генерирует JWT токен с кастомными полями
-func GenerateToken(userID int, username string) (string, error) {
-	claims := CustomClaims{
+func GenerateToken(userID uint, userRole models.UserRole) (string, string, error) {
+	// Access token
+	claims := &CustomClaims{
 		UserID:   userID,
-		Username: username,
+		UserRole: models.UserRole,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: int64(time.Duration(configs.AppSettings.AuthParams.JwtTtlMinutes) * time.Minute), // токен истекает через 1 час
+			ExpiresAt: time.Now().Add(time.Minute * 60).Unix(), // токен истекает через 1 час
+			Issuer:    configs.AppSettings.AppParams.ServerName,
+		},
+	}
+	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	accessTokenString, err := accessToken.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
+	if err != nil {
+		return "", "", err
+	}
+
+	// Refresh token
+	refreshClaims := &CustomClaims{
+		UserID:   userID,
+		UserRole: userRole,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(), // токен истекает через 72 часа
 			Issuer:    configs.AppSettings.AppParams.ServerName,
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
+	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims)
+	refreshTokenString, err := refreshToken.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
+	if err != nil {
+		return "", "", err
+	}
+
+	return accessTokenString, refreshTokenString, nil
 }
 
 // ParseToken парсит JWT токен и возвращает кастомные поля
@@ -48,5 +71,5 @@ func ParseToken(tokenString string) (*CustomClaims, error) {
 		return claims, nil
 	}
 
-	return nil, fmt.Errorf("invalid token")
+	return nil, errs.ErrInvalidToken
 }

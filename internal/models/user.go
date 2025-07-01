@@ -1,15 +1,18 @@
 package models
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
+// Пользователи системы
 type User struct {
-	ID        int       `json:"id"`
-	FullName  string    `json:"full_name" db:"full_name"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
-	DeletedAt time.Time `json:"-" db:"deleted_at"`
+	gorm.Model
+	Username string `gorm:"unique;not null" json:"username"`
+	Email    string `gorm:"unique;not null" json:"email"`
+	Password string `gorm:"not null" json:"password"`
+	Role     string `gorm:"type:varchar(20);default:'user'" json:"role"`
+	Phone    string `gorm:"size:20" json:"phone"`
+	Address  string `gorm:"size:255" json:"address"`
 }
 
 type UserSignIn struct {

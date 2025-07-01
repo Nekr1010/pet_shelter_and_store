@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"pet_shelter_and_store/internal/configs"
+	"pet_shelter_and_store/internal/controller/middlewares"
 	"pet_shelter_and_store/logger"
 )
 
@@ -15,22 +16,42 @@ func RunServer() error {
 	{
 		authG.POST("/sign-up", SignUp)
 		authG.POST("/sign-in", SignIn)
+		authG.POST("/refresh", RefreshToken)
 	}
 
-	apiG := router.Group("/api", checkUserAuthentication)
-
-	accountsG := apiG.Group("/accounts")
+	apiG := router.Group("", middlewares.CheckUserAuthentication)
+	router.GET("/store", GetAllStores)
+	router.GET("/:id", GetStoreByID)
+	storesG := apiG.Group("/store")
 	{
-		accountsG.GET("", GetAllAccounts)
-		accountsG.GET("/:id", GetAccountByID)
-		accountsG.PATCH("/balance/:id", UpdateAccountBalance)
+		storesG.POST("", CreateStore)
+		storesG.PATCH("/:id", middlewares.CheckUserStorePermission, UpdateStore)
+		storesG.DELETE("/:id", middlewares.CheckUserStorePermission, DeleteStore)
 	}
-
-	profileG := apiG.Group("/profile")
+	requestG := apiG.Group("requests")
+	adoptionRequestG := requestG.Group("/adoption")
 	{
-		profileG.GET("")
-		profileG.PUT("")
+		adoptionRequestG.POST("")
+		adoptionRequestG.GET("")
+		adoptionRequestG.GET("/:id")
+		adoptionRequestG.PUT("/:id")
+		adoptionRequestG.DELETE("")
 	}
+	//
+	//animalsG := router.Group("/animals")
+	//{
+	//	animalsG.GET("", GetAllAnimals)
+	//	animalsG.GET("/:id", GetAnimalByID)
+	//}
+	//
+	//animalsSurender := apiG.POST("", AnimalsSurendig)
+	//
+	//requests := apiG.Group("/requests")
+	//{
+	//	requests.POST("", CreateRequest)
+	//	requests.GET("", GetAllRequests)
+	//	requests.GET("/:id", GetRequestByID)
+	//}
 
 	if err := router.Run(configs.AppSettings.AppParams.PortRun); err != nil {
 		logger.Error.Printf("[controller] RunServer():  Error during running HTTP server: %s", err.Error())

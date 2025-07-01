@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"log"
 	"pet_shelter_and_store/internal/configs"
 	"pet_shelter_and_store/internal/controller"
@@ -9,32 +10,28 @@ import (
 )
 
 func main() {
-	// Reading configs
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+
 	if err := configs.ReadSettings(); err != nil {
 		log.Fatalf("Ошибка чтения настроек: %s", err)
 	}
 
-	// Initializing logger
 	if err := logger.Init(); err != nil {
-		return
+		panic(err)
 	}
-	logger.Info.Println("Loggers initialized successfully!")
 
-	// Connecting to db
-	if err := db.ConnectDB(); err != nil {
-		return
+	if err := db.ConnectToDB(); err != nil {
+		panic(err)
 	}
-	logger.Info.Println("Connection to database established successfully!")
 
-	// Initializing db-migrations
-	if err := db.InitMigrations(); err != nil {
-		return
+	if err := db.Migrate(); err != nil {
+		panic(err)
 	}
-	logger.Info.Println("Migrations initialized successfully!")
 
-	// Running http-server
 	if err := controller.RunServer(); err != nil {
 		return
 	}
-
 }

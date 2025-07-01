@@ -1,4 +1,4 @@
-package controller
+package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,12 +8,13 @@ import (
 )
 
 const (
-	authorizationHeader = "Authorization"
-	userIDCtx           = "userID"
+	AuthorizationHeader = "Authorization"
+	UserIDCtx           = "userID"
+	UserRoleCtx         = "userRole"
 )
 
-func checkUserAuthentication(c *gin.Context) {
-	header := c.GetHeader(authorizationHeader)
+func CheckUserAuthentication(c *gin.Context) {
+	header := c.GetHeader(AuthorizationHeader)
 
 	if header == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -45,6 +46,8 @@ func checkUserAuthentication(c *gin.Context) {
 		return
 	}
 
-	c.Set(userIDCtx, claims.UserID)
+	c.Set(UserIDCtx, claims.UserID)
+	c.Set(UserRoleCtx, claims.UserRole)
+
 	c.Next()
 }

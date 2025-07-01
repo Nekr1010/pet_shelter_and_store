@@ -2,19 +2,22 @@ package db
 
 import (
 	"fmt"
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"log"
 	"os"
 	"pet_shelter_and_store/internal/configs"
-	"pet_shelter_and_store/logger"
 )
 
-var db *sqlx.DB
+var (
+	dbConn *gorm.DB
+)
 
-func ConnectDB() error {
+func ConnectToDB() error {
 	cfg := configs.AppSettings.PostgresParams
 
-	dsn := fmt.Sprintf(`host=%s
+	connStr := fmt.Sprintf(`host=%s
 							port=%s 
 							user=%s 
 							password=%s 
@@ -26,20 +29,30 @@ func ConnectDB() error {
 		os.Getenv("DB_PASSWORD"),
 		cfg.Database,
 	)
-	var err error
-	db, err = sqlx.Connect("postgres", dsn)
+
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
-		logger.Error.Printf("[db] ConnectDB(): error during connect to postgres: %s", err.Error())
 		return err
 	}
+
+	dbConn = db
 
 	return nil
 }
 
-func CloseDB() error {
-	return db.Close()
+func GetDBConn() *gorm.DB {
+	return dbConn
 }
 
-func GetDBConn() *sqlx.DB {
-	return db
+func CloseDBConn() error {
+	if sqlDB, err := GetDBConn().DB(); err == nil {
+		if err = sqlDB.Close(); err != nil {
+			log.Fatalf("Error while closing DB: %s", err)
+		}
+		fmt.Println("Connection closed successfully")
+	} else {
+		log.Fatalf("Error while getting *sql.DB from GORM: %s", err)
+	}
+
+	return nil
 }

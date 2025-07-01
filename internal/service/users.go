@@ -1,44 +1,54 @@
 package service
 
 import (
-	"errors"
+	"fmt"
 	"pet_shelter_and_store/internal/errs"
 	"pet_shelter_and_store/internal/models"
 	"pet_shelter_and_store/internal/repository"
+	"pet_shelter_and_store/logger"
 	"pet_shelter_and_store/utils"
 )
 
-func CreateUser(u models.User) error {
-	// 1. Проверить существует ли пользователь с таким username
-	_, err := repository.GetUserByUsername(u.Username)
-	if err != nil && !errors.Is(err, errs.ErrNotFound) {
-		return err
-	} else if err == nil {
-		return errs.ErrUserAlreadyExists
+func GetAllUsers() (users []models.User, err error) {
+	users, err = repository.GetAllUsers()
+	if err != nil {
+		return nil, err
 	}
 
-	// 2. Захешировать пароль
-	u.Password = utils.GenerateHash(u.Password)
-
-	// 3. Создаем пользователя
-	if err = repository.CreateUser(u); err != nil {
-		return err
-	}
-
-	return nil
+	return users, nil
 }
 
-func GetUserByUsernameAndPassword(username string, password string) (models.User, error) {
-	// 1. Хешируем пароль
-	password = utils.GenerateHash(password)
-
-	// 2. Отправляем запрос в бд
-	user, err := repository.GetUserByUsernameAndPassword(username, password)
+func GetUserByID(id uint) (user models.Users, err error) {
+	user, err = repository.GetUserByID(id)
 	if err != nil {
-		if errors.Is(err, errs.ErrNotFound) {
-			return models.User{}, errs.ErrIncorrectUsernameOrPassword
-		}
-		return models.User{}, err
+		return user, err
 	}
+
 	return user, nil
+}
+
+func CreateUser(user models.User) (uint, error) {
+	usernameExists, err := repository.UserExists(user.Username)
+	if err != nil {
+		return 0, fmt.Errorf("failed to check existing user: %w", err)
+	}
+
+	if user.Password == "" || user.Username == "" {
+		return 0, errs.ErrInvalidData
+	}
+
+	if usernameExists {
+		logger.Error.Printf("user with username %s already exists", user.Username)
+		return 0, errs.ErrUsernameUniquenessFailed
+	}
+
+	user.Password = utils.GenerateHash(user.Password)
+
+	var userDB models.User
+
+	if userDB, err = repository.CreateUser(user); err != nil {
+		return 0, fmt.Errorf("failed to create user: %w", err)
+	}
+
+	return uint(userDB.ID), nil
 }
