@@ -9,7 +9,7 @@ import (
 	"pet_shelter_and_store/logger"
 )
 
-func GetAllUsers() (users []models.Users, err error) {
+func GetAllUsers() (users []models.User, err error) {
 	err = db.GetDBConn().Find(&users).Error
 	if err != nil {
 		logger.Error.Printf("[repository.GetAllUsers] error getting all users: %s\n", err.Error())
@@ -19,7 +19,7 @@ func GetAllUsers() (users []models.Users, err error) {
 	return users, nil
 }
 
-func GetUserByID(id uint) (user models.Users, err error) {
+func GetUserByID(id uint) (user models.User, err error) {
 	err = db.GetDBConn().Where("id = ?", id).First(&user).Error
 	if err != nil {
 		logger.Error.Printf("[repository.GetUserByID] error getting user by id: %v\n", err)
@@ -28,8 +28,8 @@ func GetUserByID(id uint) (user models.Users, err error) {
 	return user, nil
 }
 
-func GetUserByUsername(username string) (*models.Users, error) {
-	var user models.Users
+func GetUserByUsername(username string) (*models.User, error) {
+	var user models.User
 	err := db.GetDBConn().Where("username = ?", username).First(&user).Error
 
 	if err != nil {
@@ -57,7 +57,7 @@ func UserExists(username string) (bool, error) {
 	return usernameExists, nil
 }
 
-func CreateUser(user models.Users) (userDB models.Users, err error) {
+func CreateUser(user models.User) (userDB models.User, err error) {
 	if err = db.GetDBConn().Create(&user).Error; err != nil {
 		logger.Error.Printf("[repository.CreateUser] error creating user: %v\n", err)
 		return userDB, TranslateGormError(err)
@@ -67,7 +67,7 @@ func CreateUser(user models.Users) (userDB models.Users, err error) {
 	return userDB, nil
 }
 
-func GetUserByUsernameAndPassword(username string, password string) (user models.Users, err error) {
+func GetUserByUsernameAndPassword(username string, password string) (user models.User, err error) {
 	err = db.GetDBConn().Where("username = ? AND password = ?", username, password).First(&user).Error
 	if err != nil {
 		logger.Error.Printf("[repository.GetUserByUsernameAndPassword] error getting user by username and password: %v\n", err)
@@ -77,7 +77,7 @@ func GetUserByUsernameAndPassword(username string, password string) (user models
 	return user, nil
 }
 
-func GetUserByEmailAndPassword(password string) (user models.Users, err error) {
+func GetUserByEmailAndPassword(password string) (user models.User, err error) {
 	err = db.GetDBConn().Where("password = ?", password).First(&user).Error
 	if err != nil {
 		logger.Error.Printf("[repository.GetUserByEmailAndPassword] error getting user by email and password: %v\n", err)
@@ -87,7 +87,7 @@ func GetUserByEmailAndPassword(password string) (user models.Users, err error) {
 	return user, nil
 }
 
-func GetUserByEmailPasswordAndUsername(username, email, password string) (user models.Users, err error) {
+func GetUserByEmailPasswordAndUsername(username, email, password string) (user models.User, err error) {
 	err = db.GetDBConn().Where("password = ? AND username = ?", email, password, username).First(&user).Error
 	if err != nil {
 		logger.Error.Printf("[repository.GetUserByEmailPasswordAndUsername] error getting user by username, email and password: %v\n", err)

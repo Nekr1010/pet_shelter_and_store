@@ -8,7 +8,7 @@ import (
 	"pet_shelter_and_store/utils"
 )
 
-func SignIn(userDataCheck, password string) (user models.Users, accessToken string, refreshToken string, err error) {
+func SignIn(userDataCheck, password string) (user models.User, accessToken string, refreshToken string, err error) {
 	if userDataCheck == "" {
 		return user, "", "", errs.ErrInvalidData
 	}

@@ -7,7 +7,7 @@ import (
 
 func Migrate() error {
 	err := dbConn.AutoMigrate(
-		&models.Users{},
+		&models.User{},
 		&models.Store{},
 		&models.Product{},
 		&models.Animal{},

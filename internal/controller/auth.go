@@ -52,9 +52,9 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	user.ID = uint(userID)
+	user.ID = userID
 
-	accessToken, refreshToken, err := utils2.GenerateToken(uint(user.ID), user.Role)
+	accessToken, refreshToken, err := utils2.GenerateToken(user.ID, user.Role)
 	if err != nil {
 		logger.Error.Printf("Error generating access token: %s", err)
 		HandleError(c, err)
@@ -64,7 +64,7 @@ func SignUp(c *gin.Context) {
 	c.JSON(http.StatusOK, models.TokenResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-		UserID:       uint(user.ID),
+		UserID:       user.ID,
 	})
 }
 
@@ -112,7 +112,7 @@ func SignIn(c *gin.Context) {
 	c.JSON(http.StatusOK, models.TokenResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-		UserID:       uint(user.ID),
+		UserID:       user.ID,
 	})
 }
 

@@ -20,38 +20,36 @@ func RunServer() error {
 	}
 
 	apiG := router.Group("", middlewares.CheckUserAuthentication)
-	router.GET("/store", GetAllStores)
-	router.GET("/:id", GetStoreByID)
+	router.GET("store", GetAllStores)
+	router.GET("store/:id", GetStoreByID)
 	storesG := apiG.Group("/store")
 	{
 		storesG.POST("", CreateStore)
 		storesG.PATCH("/:id", middlewares.CheckUserStorePermission, UpdateStore)
 		storesG.DELETE("/:id", middlewares.CheckUserStorePermission, DeleteStore)
 	}
-	requestG := apiG.Group("requests")
+
+	requestG := apiG.Group("requests", middlewares.CheckUserStorePermission)
+	{
+		requestG.GET("/store/:id", GetAllStoreRequests)
+		requestG.GET("/:id", GetAllStoreRequestByID)
+		requestG.PATCH("/:id", AcceptStoreRequest)
+		requestG.DELETE("/:id", DeleteStoreRequest)
+	}
+
 	adoptionRequestG := requestG.Group("/adoption")
 	{
-		adoptionRequestG.POST("")
-		adoptionRequestG.GET("")
-		adoptionRequestG.GET("/:id")
-		adoptionRequestG.PUT("/:id")
-		adoptionRequestG.DELETE("")
+		adoptionRequestG.GET("store/:id", GetAllStoreAdoptions)
+		adoptionRequestG.POST("/:id", CreateStoreAdoption)
 	}
-	//
-	//animalsG := router.Group("/animals")
-	//{
-	//	animalsG.GET("", GetAllAnimals)
-	//	animalsG.GET("/:id", GetAnimalByID)
-	//}
-	//
-	//animalsSurender := apiG.POST("", AnimalsSurendig)
-	//
-	//requests := apiG.Group("/requests")
-	//{
-	//	requests.POST("", CreateRequest)
-	//	requests.GET("", GetAllRequests)
-	//	requests.GET("/:id", GetRequestByID)
-	//}
+
+	animalsG := router.Group("/animals")
+	{
+		animalsG.GET("", GetAllAnimals)
+		animalsG.GET(":id", GetAnimalByID)
+		animalsG.POST("", middlewares.CheckUserAuthentication, CreateAnimal)
+		animalsG.PATCH("/:id", UpdateAnimal)
+	}
 
 	if err := router.Run(configs.AppSettings.AppParams.PortRun); err != nil {
 		logger.Error.Printf("[controller] RunServer():  Error during running HTTP server: %s", err.Error())

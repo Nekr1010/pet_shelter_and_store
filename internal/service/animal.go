@@ -14,10 +14,10 @@ func GetAllAnimals() (animals []models.Animal, err error) {
 	return animals, nil
 }
 
-func GetAnimalByID(animalID uint) (animal models.Animal, err error) {
+func GetAnimalByID(animalID uint) (animal *models.Animal, err error) {
 	animal, err = repository.GetAnimalByID(animalID)
 	if err != nil {
-		return models.Animal{}, err
+		return nil, err
 	}
 
 	return animal, nil

@@ -6,23 +6,22 @@ import (
 	"os"
 	"pet_shelter_and_store/internal/configs"
 	"pet_shelter_and_store/internal/errs"
-	"pet_shelter_and_store/internal/models"
 	"time"
 )
 
 // CustomClaims определяет кастомные поля токена
 type CustomClaims struct {
-	UserID   uint            `json:"user_id"`
-	UserRole models.UserRole `json:"user_role"`
+	UserID   uint   `json:"user_id"`
+	UserRole string `json:"user_role"`
 	jwt.StandardClaims
 }
 
 // GenerateToken генерирует JWT токен с кастомными полями
-func GenerateToken(userID uint, userRole models.UserRole) (string, string, error) {
+func GenerateToken(userID uint, userRole string) (string, string, error) {
 	// Access token
 	claims := &CustomClaims{
 		UserID:   userID,
-		UserRole: models.UserRole,
+		UserRole: userRole,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Minute * 60).Unix(), // токен истекает через 1 час
 			Issuer:    configs.AppSettings.AppParams.ServerName,

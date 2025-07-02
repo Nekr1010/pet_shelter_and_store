@@ -64,13 +64,11 @@ func CreateStore(c *gin.Context) {
 
 func UpdateStore(c *gin.Context) {
 	storeID := c.GetUint(middlewares.StoreIDCtx)
-
 	var store models.Store
 	if err := c.BindJSON(&store); err != nil {
 		HandleError(c, errs.ErrValidationFailed)
 		return
 	}
-
 	store.ID = storeID
 
 	err := service.UpdateStore(store)

@@ -18,7 +18,7 @@ func GetAllUsers() (users []models.User, err error) {
 	return users, nil
 }
 
-func GetUserByID(id uint) (user models.Users, err error) {
+func GetUserByID(id uint) (user models.User, err error) {
 	user, err = repository.GetUserByID(id)
 	if err != nil {
 		return user, err
@@ -50,5 +50,5 @@ func CreateUser(user models.User) (uint, error) {
 		return 0, fmt.Errorf("failed to create user: %w", err)
 	}
 
-	return uint(userDB.ID), nil
+	return userDB.ID, nil
 }

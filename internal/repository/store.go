@@ -39,7 +39,6 @@ func CreateStore(store models.Store) (err error) {
 func UpdateStore(store models.Store) (err error) {
 	if err = db.GetDBConn().Model(&models.Store{}).Where("id = ?", store.ID).Updates(&store).Error; err != nil {
 		logger.Error.Printf("[repository.UpdateStore] Error: %v", err)
-
 		return TranslateGormError(err)
 	}
 
